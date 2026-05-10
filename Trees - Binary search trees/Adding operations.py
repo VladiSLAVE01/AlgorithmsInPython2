@@ -10,7 +10,7 @@ class TreeNode:
 				self.left = TreeNode(val)
 			else:
 				self.left.add(val)
-		elif val > self.val:
+		else:
 			if self.right is None:
 				self.right = TreeNode(val)
 			else:
@@ -31,14 +31,18 @@ class TreeNode:
 			if self.right is None:
 				return self.left
 
+			parent = self
 			min_node = self.right
 			while min_node.left:
+				parent = min_node
 				min_node = min_node.left
 
 			self.val = min_node.val
 
-			self.right = self.right.delete(min_node.val)
-
+			if parent == self:
+				self.right = min_node.right
+			else:
+				parent.left = min_node.right
 		return self
 
 	def find(self, val):
@@ -113,11 +117,10 @@ def main():
 	def build_tree(arr):
 		if not arr:
 			return None
-		n = len(arr)
-		if n % 2 == 0:
-			mid = n // 2 - 1
+		if len(arr) % 2 == 0:
+			mid = len(arr) // 2 - 1
 		else:
-			mid = n // 2
+			mid = len(arr) // 2
 		root = TreeNode(arr[mid])
 		root.left = build_tree(arr[:mid])
 		root.right = build_tree(arr[mid + 1:])
